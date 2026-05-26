@@ -525,7 +525,7 @@
         });
         box.addEventListener('paste', (e) => {
           e.preventDefault();
-          const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '').slice(0, 6);
+          const paste = (e.clipboardData || (window.clipboardData ? window.clipboardData : { getData: function() { return ''; } })).getData('text').replace(/[^0-9]/g, '').slice(0, 6);
           paste.split('').forEach((d, i) => {
             const b = document.querySelector(`.otp-digit[data-index="${i}"]`);
             if (b) b.value = d;
