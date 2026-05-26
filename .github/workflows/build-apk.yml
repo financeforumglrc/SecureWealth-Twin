@@ -3,17 +3,6 @@ name: Build Android APK
 on:
   push:
     branches: [main, master]
-    paths:
-      - 'index.html'
-      - 'js/**'
-      - 'css/**'
-      - 'assets/**'
-      - 'manifest.json'
-      - 'sw.js'
-      - 'scripts/**'
-      - 'package.json'
-      - 'capacitor.config.json'
-      - '.github/workflows/**'
   workflow_dispatch:
 
 jobs:
