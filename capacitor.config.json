@@ -1,45 +1,44 @@
 {
-  "appId": "com.securewealth.twin",
-  "appName": "SecureWealth Twin",
-  "webDir": "www",
-  "bundledWebRuntime": false,
-  "server": {
-    "url": "https://securewealth-twin-20260519.surge.sh",
-    "androidScheme": "https",
-    "cleartext": true,
-    "allowNavigation": [
-      "localhost:3000",
-      "*.onrender.com",
-      "*.netlify.app",
-      "*.vercel.app",
-      "*.surge.sh",
-      "financeforumglrc.github.io",
-      "*.generativelanguage.googleapis.com",
-      "*.api-inference.huggingface.co"
-    ],
-    "errorPath": "/offline.html"
-  },
-  "android": {
-    "buildOptions": {
-      "keystorePath": null,
-      "keystoreAlias": null
-    }
-  },
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 2000,
-      "backgroundColor": "#0B1D3A",
-      "androidSplashResourceName": "splash",
-      "androidScaleType": "CENTER_CROP",
-      "showSpinner": true,
-      "spinnerColor": "#C4A962",
-      "splashFullScreen": true,
-      "splashImmersive": true
-    },
-    "StatusBar": {
-      "style": "DARK",
-      "backgroundColor": "#0B1D3A",
-      "overlaysWebView": false
-    }
-  }
+    "appId":  "com.securewealth.twin",
+    "appName":  "SecureWealth Twin",
+    "webDir":  "www",
+    "bundledWebRuntime":  false,
+    "server":  {
+                   "androidScheme":  "https",
+                   "cleartext":  true,
+                   "allowNavigation":  [
+                                           "localhost:3000",
+                                           "*.onrender.com",
+                                           "*.netlify.app",
+                                           "*.vercel.app",
+                                           "*.surge.sh",
+                                           "financeforumglrc.github.io",
+                                           "*.generativelanguage.googleapis.com",
+                                           "*.api-inference.huggingface.co"
+                                       ],
+                   "errorPath":  "/offline.html"
+               },
+    "android":  {
+                    "buildOptions":  {
+                                         "keystorePath":  null,
+                                         "keystoreAlias":  null
+                                     }
+                },
+    "plugins":  {
+                    "SplashScreen":  {
+                                         "launchShowDuration":  2000,
+                                         "backgroundColor":  "#0B1D3A",
+                                         "androidSplashResourceName":  "splash",
+                                         "androidScaleType":  "CENTER_CROP",
+                                         "showSpinner":  true,
+                                         "spinnerColor":  "#C4A962",
+                                         "splashFullScreen":  true,
+                                         "splashImmersive":  true
+                                     },
+                    "StatusBar":  {
+                                      "style":  "DARK",
+                                      "backgroundColor":  "#0B1D3A",
+                                      "overlaysWebView":  false
+                                  }
+                }
 }
