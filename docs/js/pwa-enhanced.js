@@ -43,8 +43,13 @@ const PWA = {
       localStorage.setItem(this.LIVE_URL_KEY, url);
       this.showToast(`Live URL set! App will reload from ${url} on next launch`, 'success');
     } catch {
-      this.showToast('Invalid URL. Enter full URL like https://myapp.onrender.com', 'warning');
+      this.showToast('Invalid URL. Enter full URL like https://myapp.surge.sh', 'warning');
     }
+  },
+
+  deployToSurge() {
+    window.open('https://surge.sh/login', '_blank');
+    this.showToast('Login with sdeepu70gg@gmail.com, then run: surge in your terminal', 'info');
   },
 
   renderLiveUrlSettings(container) {
@@ -64,7 +69,7 @@ const PWA = {
         <div class="space-y-2">
           <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Server URL</label>
           <input type="url" id="live-url-input" value="${currentUrl}"
-            placeholder="https://myapp.onrender.com"
+            placeholder="https://myapp.surge.sh"
             class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-900/20">
           <p class="text-xs text-slate-400">If set, the app will load from this URL instead of bundled files</p>
         </div>
@@ -81,21 +86,18 @@ const PWA = {
         </div>
 
         <div style="text-align:center; padding-top:0.5rem;">
-          <a href="https://render.com/deploy?repo=https://github.com/financeforumglrc/SecureWealth-Twin"
-             target="_blank"
-             style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.6rem 1.25rem; background:#0B1D3A; color:#C4A962; border-radius:10px; text-decoration:none; font-size:0.85rem; font-weight:600;">
-            <i class="fas fa-rocket"></i> Deploy to Render (Free)
-          </a>
-          <p style="font-size:0.65rem; color:#94a3b8; margin-top:0.5rem;">
-            Click → Connect GitHub → Deploy → Copy URL → Paste above
-          </p>
+          <button onclick="PWA.deployToSurge()"
+                  style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.6rem 1.25rem; background:#0B1D3A; color:#C4A962; border-radius:10px; border:none; cursor:pointer; font-size:0.85rem; font-weight:600;">
+            <i class="fas fa-rocket"></i> Deploy to Surge (Free)
+          </button>
         </div>
         <div class="bg-blue-50 dark:bg-blue-900/10 rounded-lg p-3 text-xs text-blue-700 dark:text-blue-300 space-y-1">
           <p><i class="fas fa-info-circle mr-1"></i> <strong>How it works:</strong></p>
-          <p>1. Click "Deploy to Render" → connect GitHub → it auto-deploys</p>
-          <p>2. Copy your Render URL (e.g. https://xxx.onrender.com) and paste above</p>
-          <p>3. Tap "Save & Reload" — app now loads live from your server</p>
-          <p class="mt-1 text-blue-500">Future code changes: just git push → Render auto-deploys → app updates!</p>
+          <p>1. Tap "Deploy to Surge" → opens surge.sh login page</p>
+          <p>2. Enter <strong>sdeepu70gg@gmail.com</strong> and your password</p>
+          <p>3. Copy your Surge URL (e.g. https://xxx.surge.sh) and paste above</p>
+          <p>4. Tap "Save & Reload" — app now loads live from Surge!</p>
+          <p class="mt-1 text-blue-500">Future updates: just run <code>surge</code> from your project folder → app reloads!</p>
         </div>
       </div>
     `;
