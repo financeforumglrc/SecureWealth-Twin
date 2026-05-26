@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: securewealth-twin
+    env: node
+    buildCommand: npm ci
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: HF_TOKEN
+        sync: false
+      - key: PORT
+        value: 10000
+    staticPublishPath: ./

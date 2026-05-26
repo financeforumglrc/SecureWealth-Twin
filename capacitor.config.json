@@ -8,9 +8,14 @@
     "cleartext": true,
     "allowNavigation": [
       "localhost:3000",
+      "*.onrender.com",
+      "*.netlify.app",
+      "*.vercel.app",
+      "*.surge.sh",
       "*.generativelanguage.googleapis.com",
       "*.api-inference.huggingface.co"
-    ]
+    ],
+    "errorPath": "/offline.html"
   },
   "android": {
     "buildOptions": {

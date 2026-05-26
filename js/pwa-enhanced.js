@@ -4,6 +4,7 @@ const PWA = {
   deferredPrompt: null,
   isInstalled: false,
   updateAvailable: false,
+  LIVE_URL_KEY: 'sw_live_url',
 
   async init() {
     this.checkInstalled();
@@ -11,6 +12,82 @@ const PWA = {
     this.registerSW();
     this.setupNetworkMonitoring();
     this.setupAutoUpdate();
+    this.setupLiveUrlRedirect();
+  },
+
+  setupLiveUrlRedirect() {
+    const liveUrl = localStorage.getItem(this.LIVE_URL_KEY);
+    if (liveUrl) {
+      const currentOrigin = window.location.origin;
+      const targetOrigin = new URL(liveUrl).origin;
+      if (currentOrigin !== targetOrigin) {
+        this.showToast(`Redirecting to live server: ${liveUrl}`, 'info');
+        setTimeout(() => { window.location.href = liveUrl; }, 1500);
+      }
+    }
+  },
+
+  getLiveUrl() {
+    return localStorage.getItem(this.LIVE_URL_KEY) || '';
+  },
+
+  setLiveUrl(url) {
+    if (!url) {
+      localStorage.removeItem(this.LIVE_URL_KEY);
+      this.showToast('Live URL cleared — using bundled app', 'info');
+      return;
+    }
+    try {
+      new URL(url);
+      localStorage.setItem(this.LIVE_URL_KEY, url);
+      this.showToast(`Live URL set! App will reload from ${url} on next launch`, 'success');
+    } catch {
+      this.showToast('Invalid URL. Enter full URL like https://myapp.onrender.com', 'warning');
+    }
+  },
+
+  renderLiveUrlSettings(container) {
+    const currentUrl = this.getLiveUrl();
+    container.innerHTML = `
+      <div class="card p-6 space-y-4 animate-fade-in">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+            <i class="fas fa-cloud-upload-alt text-blue-600 dark:text-blue-400"></i>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-800 dark:text-slate-100">Live Updates</h3>
+            <p class="text-sm text-slate-500">Load app from a deployed server for instant updates</p>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Server URL</label>
+          <input type="url" id="live-url-input" value="${currentUrl}"
+            placeholder="https://myapp.onrender.com"
+            class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-900/20">
+          <p class="text-xs text-slate-400">If set, the app will load from this URL instead of bundled files</p>
+        </div>
+
+        <div class="flex gap-2">
+          <button onclick="PWA.setLiveUrl(document.getElementById('live-url-input').value)"
+            class="px-4 py-2 bg-blue-900 text-white rounded-lg text-sm font-medium hover:bg-blue-800 transition-colors">
+            <i class="fas fa-save mr-1"></i> Save & Reload
+          </button>
+          <button onclick="PWA.setLiveUrl('')"
+            class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-200 transition-colors">
+            <i class="fas fa-times mr-1"></i> Clear
+          </button>
+        </div>
+
+        <div class="bg-blue-50 dark:bg-blue-900/10 rounded-lg p-3 text-xs text-blue-700 dark:text-blue-300 space-y-1">
+          <p><i class="fas fa-info-circle mr-1"></i> <strong>How it works:</strong></p>
+          <p>1. Deploy this app to Render, Netlify, or any server</p>
+          <p>2. Enter the deployment URL above and save</p>
+          <p>3. Future updates = just redeploy your server</p>
+          <p class="mt-1 text-blue-500">No APK rebuild needed for updates!</p>
+        </div>
+      </div>
+    `;
   },
 
   checkInstalled() {
@@ -208,5 +285,22 @@ const PWA = {
     }, 4000);
   }
 };
+
+// Patch App.renderView to support live-update view
+if (typeof App !== 'undefined') {
+  const originalRender = App.renderView.bind(App);
+  App.renderView = function(view) {
+    if (view === 'live-update') {
+      this.currentView = view;
+      const container = document.getElementById('main-content');
+      container.innerHTML = '';
+      const navItem = document.querySelector(`.nav-item[data-view="${view}"]`);
+      if (navItem) this.setActiveNav(navItem);
+      PWA.renderLiveUrlSettings(container);
+      return;
+    }
+    originalRender(view);
+  };
+}
 
 PWA.init();
