@@ -4,6 +4,7 @@
   "webDir": "www",
   "bundledWebRuntime": false,
   "server": {
+    "url": "https://securewealth-twin-20260519.surge.sh",
     "androidScheme": "https",
     "cleartext": true,
     "allowNavigation": [
