@@ -217,7 +217,7 @@
         <!-- Header — Glass morphism -->
         <header class="fb-header">
             <div class="fb-header-left">
-                <button id="mobile-menu-btn" class="fb-header-btn" title="Menu">
+                <button id="mobile-menu-btn" class="fb-header-btn" title="Menu" onclick="toggleMainMenu(event)">
                     <i class="fas fa-bars"></i>
                 </button>
                 <h2 id="page-title">Dashboard</h2>
@@ -551,26 +551,17 @@
   var sidebar = document.getElementById('sidebar');
   if (!sidebar) return;
 
-  // Replace the menu button with a fresh one (no event listeners at all)
-  var oldBtn = document.getElementById('mobile-menu-btn');
-  if (oldBtn) {
-    var newBtn = document.createElement('button');
-    newBtn.id = 'mobile-menu-btn';
-    newBtn.className = 'fb-header-btn';
-    newBtn.title = 'Menu';
-    newBtn.innerHTML = '<i class="fas fa-bars"></i>';
-    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
-
-    newBtn.addEventListener('click', function(e) {
-      var isMobile = window.innerWidth < 768;
-      if (isMobile) {
-        sidebar.classList.add('open');
-        document.body.classList.add('sidebar-open');
-      } else {
-        document.body.classList.toggle('sidebar-collapsed');
-      }
-    });
-  }
+  // Define global toggle function (called from HTML onclick attribute)
+  window.toggleMainMenu = function(e) {
+    if (e) e.stopImmediatePropagation();
+    sidebar.classList.remove('hidden', 'absolute', 'z-40', 'h-full');
+    if (window.innerWidth < 768) {
+      sidebar.classList.toggle('open');
+      document.body.classList.toggle('sidebar-open');
+    } else {
+      document.body.classList.toggle('sidebar-collapsed');
+    }
+  };
 
   // Close sidebar on nav item click
   sidebar.addEventListener('click', function(e) {
@@ -587,9 +578,9 @@
 
   // Close mobile sidebar when clicking outside
   document.addEventListener('click', function(e) {
-    if (window.innerWidth < 768 && sidebar.classList.contains('open')) {
+    if (window.innerWidth < 768 && sidebar.classList.contains('open') && !sidebar.contains(e.target)) {
       var btn = document.getElementById('mobile-menu-btn');
-      if (!sidebar.contains(e.target) && (!btn || !btn.contains(e.target))) {
+      if (!btn || !btn.contains(e.target)) {
         sidebar.classList.remove('open');
         document.body.classList.remove('sidebar-open');
       }
