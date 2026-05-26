@@ -545,47 +545,81 @@
 <script src="js/charts-fix.js?v=11"></script>
 <script src="js/dashboard-fix.js?v=11"></script>
 
-<!-- ═══ FINAL SIDEBAR MENU FIX — runs last after all scripts ═══ -->
+<!-- ═══ UNIVERSAL HAMBURGER MENU — creates floating nav independent of sidebar ═══ -->
+<style>
+#floating-menu {
+  position: fixed; top: 0; left: -280px; width: 260px; height: 100vh;
+  background: linear-gradient(180deg, #060F1E, #0B1D3A, #060F1E);
+  z-index: 9999; overflow-y: auto; transition: left 0.3s ease;
+  padding: 1rem 0; box-shadow: 4px 0 30px rgba(0,0,0,0.5);
+}
+#floating-menu.open { left: 0; }
+#floating-menu .fm-brand { padding: 0.5rem 1rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 0.5rem; text-align: center; }
+#floating-menu .fm-brand h2 { color: #C4A962; font-size: 1rem; margin: 0; }
+#floating-menu .fm-brand p { color: rgba(255,255,255,0.3); font-size: 0.6rem; letter-spacing: 0.1em; }
+#floating-menu .fm-section { color: rgba(255,255,255,0.25); font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.75rem 1rem 0.3rem; }
+#floating-menu .fm-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 1rem; color: #A3B1C6; text-decoration: none; font-size: 0.82rem; cursor: pointer; border-left: 3px solid transparent; }
+#floating-menu .fm-item:hover, #floating-menu .fm-item.active { background: rgba(196,169,98,0.1); color: #D4BD7C; border-left-color: #C4A962; }
+#floating-menu .fm-item i { width: 18px; text-align: center; opacity: 0.6; }
+#floating-menu .fm-item:hover i { opacity: 1; }
+#floating-menu .fm-close { position: absolute; top: 10px; right: 10px; color: rgba(255,255,255,0.4); cursor: pointer; font-size: 1.2rem; background: none; border: none; padding: 4px 8px; }
+#floating-menu .fm-close:hover { color: white; }
+#fm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998; display: none; }
+#fm-overlay.show { display: block; }
+</style>
+<div id="fm-overlay"></div>
+<div id="floating-menu"></div>
 <script>
 (function(){
-  var sidebar = document.getElementById('sidebar');
-  if (!sidebar) return;
+  var menu = document.getElementById('floating-menu');
+  var overlay = document.getElementById('fm-overlay');
+  var navItems = [
+    { section: 'Overview' },
+    { icon: 'th-large', label: 'Dashboard', view: 'dashboard' },
+    { icon: 'brain', label: 'Wealth Twin', view: 'wealth-twin', badge: 'AI' },
+    { icon: 'bullseye', label: 'Goals', view: 'goals' },
+    { icon: 'chart-pie', label: 'Portfolio', view: 'portfolio' },
+    { icon: 'building-columns', label: 'Assets', view: 'assets' },
+    { section: 'Markets & Intelligence' },
+    { icon: 'globe-asia', label: 'Markets', view: 'market' },
+    { icon: 'file-invoice', label: 'Tax Centre', view: 'tax' },
+    { icon: 'calculator', label: 'Calculators', view: 'calculators' },
+    { section: 'Security & Compliance' },
+    { icon: 'shield-virus', label: 'Protection', view: 'protection' },
+    { icon: 'lock', label: 'Privacy & Consent', view: 'privacy' },
+    { icon: 'list-check', label: 'Transactions', view: 'transactions' },
+    { section: 'Settings' },
+    { icon: 'cloud-upload-alt', label: 'Live Updates', view: 'live-update' }
+  ];
+  var html = '<button class="fm-close" onclick="closeFloatingMenu()">&times;</button>';
+  html += '<div class="fm-brand"><h2>SecureWealth</h2><p>Private Banking</p></div>';
+  navItems.forEach(function(item) {
+    if (item.section) {
+      html += '<div class="fm-section">' + item.section + '</div>';
+    } else {
+      html += '<a class="fm-item" data-view="' + item.view + '" onclick="navigateTo(\'' + item.view + '\')">';
+      html += '<i class="fas fa-' + item.icon + '"></i> ' + item.label;
+      if (item.badge) html += '<span style="margin-left:auto;background:#C4A962;color:#0B1D3A;font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:10px;">' + item.badge + '</span>';
+      html += '</a>';
+    }
+  });
+  menu.innerHTML = html;
 
-  // Define global toggle function (called from HTML onclick attribute)
   window.toggleMainMenu = function(e) {
     if (e) e.stopImmediatePropagation();
-    sidebar.classList.remove('hidden', 'absolute', 'z-40', 'h-full');
-    if (window.innerWidth < 768) {
-      sidebar.classList.toggle('open');
-      document.body.classList.toggle('sidebar-open');
-    } else {
-      document.body.classList.toggle('sidebar-collapsed');
-    }
+    menu.classList.toggle('open');
+    overlay.classList.toggle('show');
   };
-
-  // Close sidebar on nav item click
-  sidebar.addEventListener('click', function(e) {
-    var item = e.target.closest('[data-view]');
-    if (item) {
-      if (window.innerWidth < 768) {
-        sidebar.classList.remove('open');
-        document.body.classList.remove('sidebar-open');
-      } else {
-        document.body.classList.remove('sidebar-collapsed');
-      }
-    }
-  });
-
-  // Close mobile sidebar when clicking outside
-  document.addEventListener('click', function(e) {
-    if (window.innerWidth < 768 && sidebar.classList.contains('open') && !sidebar.contains(e.target)) {
-      var btn = document.getElementById('mobile-menu-btn');
-      if (!btn || !btn.contains(e.target)) {
-        sidebar.classList.remove('open');
-        document.body.classList.remove('sidebar-open');
-      }
-    }
-  });
+  window.closeFloatingMenu = function() {
+    menu.classList.remove('open');
+    overlay.classList.remove('show');
+  };
+  window.navigateTo = function(view) {
+    closeFloatingMenu();
+    if (window.App && App.renderView) App.renderView(view);
+  };
+  overlay.onclick = closeFloatingMenu;
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeFloatingMenu(); });
 })();
 </script>
 
