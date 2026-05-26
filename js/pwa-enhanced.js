@@ -13,6 +13,7 @@ const PWA = {
     this.setupNetworkMonitoring();
     this.setupAutoUpdate();
     this.setupLiveUrlRedirect();
+    this.setupMobileLayout();
   },
 
   setupLiveUrlRedirect() {
@@ -252,7 +253,6 @@ const PWA = {
 
     window.addEventListener('online', updateStatus);
     window.addEventListener('offline', updateStatus);
-    updateStatus();
   },
 
   setupAutoUpdate() {
@@ -263,6 +263,24 @@ const PWA = {
           if (reg) await reg.update();
         } catch (e) {}
       }, 1800000);
+    }
+  },
+
+  setupMobileLayout() {
+    const sidebar = document.getElementById('sidebar');
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+
+    if (menuBtn && sidebar) {
+      menuBtn.addEventListener('click', function() {
+        sidebar.classList.toggle('open');
+        document.body.classList.toggle('sidebar-open');
+      });
+    }
+
+    if (mobileNav) {
+      mobileNav.style.display = '';
+      mobileNav.classList.remove('hidden');
     }
   },
 
