@@ -282,9 +282,13 @@ const PWA = {
     const mobileNav = document.getElementById('mobile-nav');
 
     if (menuBtn && sidebar) {
-      menuBtn.addEventListener('click', function() {
+      var newBtn = menuBtn.cloneNode(true);
+      menuBtn.parentNode.replaceChild(newBtn, menuBtn);
+      newBtn.addEventListener('click', function() {
         sidebar.classList.toggle('open');
         document.body.classList.toggle('sidebar-open');
+        sidebar.classList.remove('hidden', 'absolute', 'z-40');
+        sidebar.classList.add('fixed');
       });
     }
 
