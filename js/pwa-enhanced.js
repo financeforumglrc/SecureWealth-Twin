@@ -277,26 +277,33 @@ const PWA = {
   },
 
   setupMobileLayout() {
-    const sidebar = document.getElementById('sidebar');
-    const menuBtn = document.getElementById('mobile-menu-btn');
-    const mobileNav = document.getElementById('mobile-nav');
+    var sidebar = document.getElementById('sidebar');
+    var menuBtn = document.getElementById('mobile-menu-btn');
+    var mobileNav = document.getElementById('mobile-nav');
 
     if (menuBtn && sidebar) {
       var newBtn = menuBtn.cloneNode(true);
       menuBtn.parentNode.replaceChild(newBtn, menuBtn);
-      newBtn.addEventListener('click', function() {
-        sidebar.classList.toggle('open');
-        document.body.classList.toggle('sidebar-open');
-        sidebar.classList.remove('hidden', 'absolute', 'z-40');
-        sidebar.classList.add('fixed');
-      });
+      newBtn.onclick = function(e) {
+        e.preventDefault();
+        if (window.innerWidth < 768) {
+          sidebar.classList.toggle('open');
+          document.body.classList.remove('sidebar-collapsed');
+        } else {
+          document.body.classList.toggle('sidebar-collapsed');
+          sidebar.classList.remove('open');
+        }
+      };
     }
 
     if (sidebar) {
-      sidebar.querySelectorAll('.nav-item').forEach(function(item) {
+      sidebar.querySelectorAll('.nav-item, .fb-nav-item').forEach(function(item) {
         item.addEventListener('click', function() {
-          sidebar.classList.remove('open');
-          document.body.classList.remove('sidebar-open');
+          if (window.innerWidth < 768) {
+            sidebar.classList.remove('open');
+          } else {
+            document.body.classList.remove('sidebar-collapsed');
+          }
         });
       });
     }

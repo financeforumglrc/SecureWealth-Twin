@@ -998,6 +998,25 @@ h4 { font-size: 0.95rem; font-weight: 600; }
   .fb-header-user-info { display: none; }
 }
 
+/* ─── Desktop sidebar collapse ───────────────────────────────── */
+body.sidebar-collapsed .fb-sidebar {
+  transform: translateX(-100%);
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 50;
+  transition: transform var(--fb-transition-slow);
+}
+body.sidebar-collapsed .fb-main {
+  margin-left: 0;
+  width: 100%;
+  border-radius: 0;
+}
+body.sidebar-collapsed .fb-header {
+  border-radius: 0;
+}
+
 /* ─── Mobile Bottom Nav ─────────────────────────────────────── */
 #mobile-nav {
   background: var(--fb-card) !important;
