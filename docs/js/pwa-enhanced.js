@@ -277,37 +277,7 @@ const PWA = {
   },
 
   setupMobileLayout() {
-    var sidebar = document.getElementById('sidebar');
-    var menuBtn = document.getElementById('mobile-menu-btn');
     var mobileNav = document.getElementById('mobile-nav');
-
-    if (menuBtn && sidebar) {
-      var newBtn = menuBtn.cloneNode(true);
-      menuBtn.parentNode.replaceChild(newBtn, menuBtn);
-      newBtn.onclick = function(e) {
-        e.preventDefault();
-        if (window.innerWidth < 768) {
-          sidebar.classList.toggle('open');
-          document.body.classList.remove('sidebar-collapsed');
-        } else {
-          document.body.classList.toggle('sidebar-collapsed');
-          sidebar.classList.remove('open');
-        }
-      };
-    }
-
-    if (sidebar) {
-      sidebar.querySelectorAll('.nav-item, .fb-nav-item').forEach(function(item) {
-        item.addEventListener('click', function() {
-          if (window.innerWidth < 768) {
-            sidebar.classList.remove('open');
-          } else {
-            document.body.classList.remove('sidebar-collapsed');
-          }
-        });
-      });
-    }
-
     if (mobileNav) {
       mobileNav.style.display = '';
       mobileNav.classList.remove('hidden');
