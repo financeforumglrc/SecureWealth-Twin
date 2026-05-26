@@ -292,6 +292,15 @@ const PWA = {
       });
     }
 
+    if (sidebar) {
+      sidebar.querySelectorAll('.nav-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+          sidebar.classList.remove('open');
+          document.body.classList.remove('sidebar-open');
+        });
+      });
+    }
+
     if (mobileNav) {
       mobileNav.style.display = '';
       mobileNav.classList.remove('hidden');
