@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+
+# Environment files (contains secrets)
+.env
+
+# Build output
+dist/
+build/
+client/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Backup files
+*.min.bak
+*.min.bak2
+
+# Temporary files
+*.tmp
+temp/
+tmp/
+
+# Coverage
+coverage/
+
+# Capacitor / Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/captures/
+android/.externalNativeBuild/
+
+# Capacitor www (regenerated from source)
+www/
+www2/
+
+# Misc
+*.zip
+*.apk

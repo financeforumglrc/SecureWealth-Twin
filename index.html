@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0B1D3A">
+    <meta name="description" content="AI-powered digital wealth intelligence with built-in fraud protection">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="manifest" href="/manifest.json?v=12">
+    <link rel="apple-touch-icon" href="/assets/icon-192x192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="WealthTwin">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="SecureWealth Twin">
+    <title>SecureWealth Twin — Private Wealth Intelligence</title>
+
+    <!-- Preconnect for CDN -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- Foreign Bank Premium Design System -->
+    <link rel="stylesheet" href="css/foreign-bank.css?v=12">
+
+    <!-- Legacy style fallback -->
+    <link rel="stylesheet" href="css/style.min.css?v=11">
+
+    <!-- Tailwind CSS (keep for JS-generated innerHTML) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Chart.js canvas constraints */
+        .chart-wrapper, .relative:has(> canvas) { position: relative; overflow: hidden; }
+        canvas { display: block; max-height: 100% !important; max-width: 100% !important; }
+
+        /* Mobile-responsive modals */
+        @media (max-width: 640px) {
+            .fixed.inset-0 {
+                align-items: flex-end !important;
+                padding: 0 !important;
+            }
+            .fixed.inset-0 > div {
+                max-width: 100% !important;
+                width: 100% !important;
+                border-radius: 1rem 1rem 0 0 !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+        }
+
+        /* Skeleton pulse */
+        @keyframes skeletonPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .skeleton-pulse { animation: skeletonPulse 1.5s ease-in-out infinite; }
+
+        /* Counter transition */
+        .counter-animate { transition: all 0.3s ease; }
+    </style>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;650;700;800&display=swap" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        if (window.Chart) {
+            Chart.defaults.responsive = true;
+            Chart.defaults.maintainAspectRatio = false;
+        }
+    </script>
+</head>
+<body class="bg-slate-50">
+
+<!-- Offline Indicator Bar -->
+<div id="offline-indicator"><i class="fas fa-wifi-slash mr-1"></i> You are offline — limited functionality</div>
+
+<!-- PWA Splash Screen (shown before app loads in standalone mode) -->
+<div id="pwa-splash" class="pwa-loading" style="display:none;">
+    <div class="logo"><i class="fas fa-shield-halved"></i></div>
+    <h2>SecureWealth Twin</h2>
+    <p>Private Banking Intelligence</p>
+    <div class="spinner"></div>
+</div>
+<script>
+(function(){
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+        document.getElementById('pwa-splash').style.display = 'flex';
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+        var splash = document.getElementById('pwa-splash');
+        if (splash) {
+            splash.classList.add('fade-out');
+            setTimeout(function(){ splash.style.display = 'none'; }, 500);
+        }
+    });
+    window.addEventListener('load', function(){
+        var splash = document.getElementById('pwa-splash');
+        if (splash && !splash.classList.contains('fade-out')) {
+            splash.classList.add('fade-out');
+            setTimeout(function(){ splash.style.display = 'none'; }, 500);
+        }
+    });
+})();
+</script>
+
+<!-- Skip to content (accessibility) -->
+<a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:bg-blue-900 focus:text-white focus:rounded-lg focus:font-semibold focus:outline-none">Skip to main content</a>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- APP SHELL — Foreign Bank Layout -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="fb-app-shell" id="app-shell">
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- SIDEBAR — Dark Navy Institutional -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <aside class="fb-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+
+        <!-- Brand -->
+        <div class="fb-brand">
+            <div class="fb-brand-icon">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <div class="fb-brand-text">
+                <h1>SecureWealth</h1>
+                <p>Private Banking</p>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="fb-nav" id="sidebar-nav">
+            <div class="fb-nav-section">Overview</div>
+
+            <a href="#" data-view="dashboard" class="fb-nav-item nav-item active" id="nav-dashboard">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="#" data-view="wealth-twin" class="fb-nav-item nav-item" id="nav-wealth-twin">
+                <i class="fas fa-brain"></i> Wealth Twin
+                <span class="nav-badge">AI</span>
+            </a>
+            <a href="#" data-view="goals" class="fb-nav-item nav-item" id="nav-goals">
+                <i class="fas fa-bullseye"></i> Goals
+            </a>
+            <a href="#" data-view="portfolio" class="fb-nav-item nav-item" id="nav-portfolio">
+                <i class="fas fa-chart-pie"></i> Portfolio
+            </a>
+            <a href="#" data-view="assets" class="fb-nav-item nav-item" id="nav-assets">
+                <i class="fas fa-building-columns"></i> Assets
+            </a>
+
+            <div class="fb-nav-section">Markets & Intelligence</div>
+
+            <a href="#" data-view="market" class="fb-nav-item nav-item" id="nav-market">
+                <i class="fas fa-globe-asia"></i> Markets
+            </a>
+            <a href="#" data-view="tax" class="fb-nav-item nav-item" id="nav-tax">
+                <i class="fas fa-file-invoice"></i> Tax Centre
+            </a>
+            <a href="#" data-view="calculators" class="fb-nav-item nav-item" id="nav-calculators">
+                <i class="fas fa-calculator"></i> Calculators
+            </a>
+
+            <div class="fb-nav-section">Security & Compliance</div>
+
+            <a href="#" data-view="protection" class="fb-nav-item nav-item" id="nav-protection">
+                <i class="fas fa-shield-virus"></i> Protection
+            </a>
+            <a href="#" data-view="privacy" class="fb-nav-item nav-item" id="nav-privacy">
+                <i class="fas fa-lock"></i> Privacy & Consent
+            </a>
+            <a href="#" data-view="transactions" class="fb-nav-item nav-item" id="nav-transactions">
+                <i class="fas fa-list-check"></i> Transactions
+            </a>
+        </nav>
+
+        <!-- Sidebar Footer — AI Status + Version -->
+        <div class="fb-sidebar-footer">
+            <div class="fb-ai-status" onclick="toggleChatbot()" style="cursor:pointer;" title="Open Wealth Twin AI Assistant">
+                <i class="fas fa-microchip"></i>
+                <div class="fb-ai-status-text">
+                    <span class="label">Wealth Twin AI</span>
+                    <span class="status">Click to chat — Learning your patterns</span>
+                    <div class="fb-ai-status-bar">
+                        <div class="fb-ai-status-bar-fill" style="width: 78%"></div>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: rgba(255,255,255,0.3); font-size: 0.7rem;"></i>
+            </div>
+            <div style="padding: 6px 16px 4px; text-align: center; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 6px;">
+                <span style="color: rgba(255,255,255,0.2); font-size: 10px; letter-spacing: 0.5px;">
+                    <i class="fas fa-mobile-screen-button" style="margin-right: 4px;"></i>
+                    v3.0.0
+                </span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT AREA -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div class="fb-main">
+
+        <!-- Header — Glass morphism -->
+        <header class="fb-header">
+            <div class="fb-header-left">
+                <button id="mobile-menu-btn" class="md:hidden fb-header-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2 id="page-title">Dashboard</h2>
+            </div>
+
+            <div class="fb-header-right">
+                <!-- Market Status -->
+                <span id="market-status-badge" class="fb-header-pill market-open hidden md:inline-flex">
+                    <i class="fas fa-circle text-[6px]"></i> Market Open
+                </span>
+
+                <!-- Live Clock -->
+                <span id="live-clock" class="fb-header-clock hidden lg:inline-block"></span>
+
+                <!-- Language Toggle -->
+                <button onclick="toggleLanguage()" class="fb-header-btn" title="Switch Language">
+                    <i class="fas fa-globe"></i>
+                </button>
+                <span id="lang-label" class="text-xs font-semibold text-slate-500 hidden sm:inline">EN</span>
+
+                <!-- Dark Mode Toggle -->
+                <button onclick="toggleDarkMode()" class="fb-header-btn" title="Toggle Dark Mode">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+
+                <!-- Notifications -->
+                <button onclick="toggleNotifications()" class="fb-header-btn relative" id="notif-bell-btn">
+                    <i class="fas fa-bell" id="notif-bell"></i>
+                    <span id="notif-badge" class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] rounded-full flex items-center justify-center font-bold hidden">3</span>
+                </button>
+
+                <!-- Notification Dropdown -->
+                <div id="notif-dropdown" class="hidden absolute top-14 right-6 w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden">
+                    <div class="p-3 border-b border-slate-100 flex items-center justify-between">
+                        <span class="font-semibold text-sm text-slate-800">Notifications</span>
+                        <button onclick="markAllRead()" class="text-xs text-blue-600 hover:underline font-medium">Mark all read</button>
+                    </div>
+                    <div id="notif-list" class="max-h-64 overflow-y-auto"></div>
+                </div>
+
+                <!-- Account Switch -->
+                <div class="fb-header-user" style="position:relative;">
+                    <div class="fb-header-user-info hidden sm:block">
+                        <p class="name">Rahul Sharma</p>
+                        <p class="tier">Private Client</p>
+                    </div>
+                    <div class="fb-avatar" style="cursor:pointer;" onclick="var d=document.getElementById('acct-dd');d.classList.toggle('hidden')">RS</div>
+                    <div id="acct-dd" class="hidden absolute top-12 right-0 w-64 bg-white rounded-2xl shadow-2xl border z-50 overflow-hidden">
+                        <div class="p-3 bg-slate-50 border-b"><p class="text-xs text-slate-500 font-semibold uppercase">Switch Account</p></div>
+                        <div class="p-3 flex items-center gap-3 hover:bg-slate-50 cursor-pointer border-b" onclick="var d=document.getElementById('acct-dd');d.classList.add('hidden');location.reload()"><div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background:#0B1D3A;">RS</div><div><p class="text-sm font-semibold">Rahul Sharma</p><p class="text-[10px] text-slate-400">Parent</p></div></div>
+                        <div class="p-3 flex items-center gap-3 hover:bg-slate-50 cursor-pointer border-b" onclick="var d=document.getElementById('acct-dd');d.classList.add('hidden');localStorage.setItem('sw_kid_mode','arjun');location.reload()"><div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background:#3B82F6;">AS</div><div><p class="text-sm font-semibold">Arjun Sharma</p><p class="text-[10px] text-slate-400">Child</p></div></div>
+                        <div class="p-3 flex items-center gap-3 hover:bg-slate-50 cursor-pointer border-b" onclick="var d=document.getElementById('acct-dd');d.classList.add('hidden');localStorage.setItem('sw_kid_mode','ananya');location.reload()"><div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background:#EC4899;">AN</div><div><p class="text-sm font-semibold">Ananya Sharma</p><p class="text-[10px] text-slate-400">Child</p></div></div>
+                        <div class="p-3 flex items-center gap-3 hover:bg-red-50 cursor-pointer" onclick="if(confirm('Logout?')){localStorage.clear();location.reload()}"><i class="fas fa-sign-out-alt text-red-400"></i><p class="text-sm text-red-500 font-medium">Logout</p></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area — Views injected here by JS -->
+        <main id="main-content" class="fb-content" role="main" aria-label="Page content">
+            <!-- Views rendered by App.renderView() -->
+        </main>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- RISK CHECK MODAL -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div id="risk-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all scale-95 opacity-0" id="risk-modal-content">
+        <div class="fb-modal-header bg-gradient-to-r from-slate-900 to-slate-800 p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-shield-halved text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">Wealth Protection Check</h3>
+                        <p class="text-sm text-slate-300">Analyzing transaction risk…</p>
+                    </div>
+                </div>
+                <button onclick="closeRiskModal()" class="text-slate-400 hover:text-white transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <div class="p-6">
+            <div id="risk-analysis-content">
+                <!-- Dynamic content from risk engine -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- MOBILE BOTTOM NAVIGATION -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<nav id="mobile-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40 hidden" style="display:none;">
+    <div class="flex justify-around items-center py-2">
+        <a href="#" onclick="App.renderView('dashboard')" class="flex flex-col items-center gap-0.5 p-2 text-blue-900">
+            <i class="fas fa-th-large text-lg"></i>
+            <span class="text-[10px] font-medium">Home</span>
+        </a>
+        <a href="#" onclick="App.renderView('wealth-twin')" class="flex flex-col items-center gap-0.5 p-2 text-slate-400">
+            <i class="fas fa-brain text-lg"></i>
+            <span class="text-[10px] font-medium">AI Twin</span>
+        </a>
+        <a href="#" onclick="App.renderView('portfolio')" class="flex flex-col items-center gap-0.5 p-2 text-slate-400">
+            <i class="fas fa-chart-pie text-lg"></i>
+            <span class="text-[10px] font-medium">Portfolio</span>
+        </a>
+        <a href="#" onclick="App.renderView('protection')" class="flex flex-col items-center gap-0.5 p-2 text-slate-400">
+            <i class="fas fa-shield-virus text-lg"></i>
+            <span class="text-[10px] font-medium">Protect</span>
+        </a>
+        <a href="#" onclick="toggleChatbot()" class="flex flex-col items-center gap-0.5 p-2 text-slate-400">
+            <i class="fas fa-comments text-lg"></i>
+            <span class="text-[10px] font-medium">Chat</span>
+        </a>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- CHATBOT WIDGET -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <!-- Chatbot Window -->
+    <div id="chatbot-window" class="hidden flex-col w-80 sm:w-96 h-[500px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+        <!-- Chatbot Header -->
+        <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-4 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white text-xs">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-white">Wealth Twin AI</p>
+                    <p id="ai-status-text" class="text-xs text-white/60">Offline AI Active</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="toggleApiSetup()" class="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" title="Connect AI APIs">
+                    <i class="fas fa-plug text-xs text-white/70"></i>
+                </button>
+                <button onclick="expandChatbot()" class="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" title="Expand">
+                    <i class="fas fa-expand text-xs text-white/70"></i>
+                </button>
+                <button onclick="toggleChatbot()" class="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                    <i class="fas fa-times text-xs text-white/70"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div id="chatbot-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
+            <div class="flex items-start gap-2" id="chat-welcome">
+                <div class="w-7 h-7 bg-blue-900/10 rounded-full flex items-center justify-center flex-shrink-0 text-blue-900 text-xs">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="bot-message p-3 text-sm text-slate-700 max-w-[90%] bg-white rounded-2xl rounded-tl-md shadow-sm border border-slate-100">
+                    <p class="font-semibold mb-1">Welcome to Wealth Twin AI</p>
+                    <p class="text-slate-500 text-xs">I can help with savings, investments, taxes, fraud protection, and market trends. Ask me anything.</p>
+                    <div class="flex gap-1.5 mt-3 flex-wrap">
+                        <button onclick="quickChat('How do I save tax?')" class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">Save tax?</button>
+                        <button onclick="quickChat('SIP recommendations')" class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">SIP tips</button>
+                        <button onclick="quickChat('Am I spending too much?')" class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">Spending</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div id="typing-indicator" class="hidden px-4 py-2 bg-slate-50">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-blue-900/10 rounded-full flex items-center justify-center text-blue-900 text-xs">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="flex gap-1">
+                    <div class="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                    <div class="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                    <div class="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+                </div>
+                <span id="typing-source" class="text-xs text-slate-400">AI is thinking…</span>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="p-3 bg-white border-t border-slate-100">
+            <div class="flex gap-2">
+                <button onclick="startVoiceInput()" id="voice-btn" class="w-9 h-9 bg-slate-100 text-slate-500 rounded-lg flex items-center justify-center hover:bg-amber-50 hover:text-amber-600 transition-colors" title="Voice input">
+                    <i class="fas fa-microphone text-sm"></i>
+                </button>
+                <input type="text" id="chatbot-input" placeholder="Ask about SIPs, taxes, gold…"
+                    class="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900/30"
+                    onkeypress="if(event.key==='Enter')sendChatbotMessage()">
+                <button onclick="sendChatbotMessage()"
+                    class="w-9 h-9 bg-blue-900 text-white rounded-lg flex items-center justify-center hover:bg-blue-800 transition-colors">
+                    <i class="fas fa-paper-plane text-xs"></i>
+                </button>
+            </div>
+            <div id="voice-waveform" class="hidden h-6 mt-2 flex items-center justify-center gap-0.5">
+                <div class="voice-bar w-0.5 bg-amber-500 rounded-full" style="height: 20%"></div>
+                <div class="voice-bar w-0.5 bg-amber-500 rounded-full" style="height: 40%"></div>
+                <div class="voice-bar w-0.5 bg-amber-500 rounded-full" style="height: 70%"></div>
+                <div class="voice-bar w-0.5 bg-amber-500 rounded-full" style="height: 100%"></div>
+                <div class="voice-bar w-0.5 bg-amber-500 rounded-full" style="height: 60%"></div>
+                <div class="voice-bar w-0.5 bg-amber-500 rounded-full" style="height: 30%"></div>
+                <div class="voice-bar w-0.5 bg-amber-500 rounded-full" style="height: 80%"></div>
+                <div class="voice-bar w-0.5 bg-amber-500 rounded-full" style="height: 45%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot Toggle Button -->
+    <button onclick="toggleChatbot()" id="chatbot-toggle"
+        class="w-14 h-14 bg-gradient-to-br from-blue-900 to-blue-800 text-white rounded-full shadow-xl flex items-center justify-center hover:scale-105 transition-transform relative">
+        <i class="fas fa-comments text-xl"></i>
+        <span id="chatbot-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-white text-xs rounded-full flex items-center justify-center font-bold hidden">1</span>
+    </button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT BUNDLES -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<!-- Core bundle -->
+<!-- Account mode reader -->
+<script>
+(function(){
+  var mode = localStorage.getItem('sw_kid_mode');
+  if (mode === 'arjun') {
+    document.addEventListener('DOMContentLoaded', function(){
+      var n = document.querySelector('.fb-header-user-info .name');
+      var t = document.querySelector('.fb-header-user-info .tier');
+      var a = document.querySelector('.fb-avatar');
+      if(n) n.textContent = 'Arjun Sharma';
+      if(t) t.textContent = 'Child · Age 14';
+      if(a){ a.textContent = 'AS'; a.style.background = '#3B82F6'; a.style.border = '3px solid #10B981'; }
+    });
+  } else if (mode === 'ananya') {
+    document.addEventListener('DOMContentLoaded', function(){
+      var n = document.querySelector('.fb-header-user-info .name');
+      var t = document.querySelector('.fb-header-user-info .tier');
+      var a = document.querySelector('.fb-avatar');
+      if(n) n.textContent = 'Ananya Sharma';
+      if(t) t.textContent = 'Child · Age 10';
+      if(a){ a.textContent = 'AN'; a.style.background = '#EC4899'; a.style.border = '3px solid #10B981'; }
+    });
+  }
+  if (!mode || mode === 'parent') localStorage.removeItem('sw_kid_mode');
+})();
+</script>
+
+<script src="js/bundle.min.js?v=11"></script>
+
+<!-- Dashboard comprehensive override -->
+<script src="js/dashboard-comprehensive.js?v=11"></script>
+
+    <!-- PWA Enhanced Module (install prompt, updates, network status, offline) -->
+    <script src="js/pwa-enhanced.js?v=12"></script>
+
+    <!-- API Keys -->
+    <script src="js/api-keys.js?v=11"></script>
+
+<!-- View renderers -->
+<script src="js/views-comprehensive.js?v=11"></script>
+
+<!-- Enhanced features -->
+<script src="js/features-enhanced.js?v=11"></script>
+
+<!-- Hackathon features -->
+<script src="js/hackathon-features.js?v=11"></script>
+
+<!-- v10 features -->
+<script src="js/v10-features.js?v=11"></script>
+
+<!-- Premium UI layer -->
+<script src="js/premium-ui.js?v=11"></script>
+
+<!-- Innovations & sentinel -->
+<script src="js/innovations.js?v=11"></script>
+<script src="js/sentinel.js?v=11"></script>
+<script src="js/auth-guardian.js?v=11"></script>
+<script src="js/bio-otp.js?v=11"></script>
+<script src="js/salary-shield.js?v=11"></script>
+<script src="js/subtrack.js?v=11"></script>
+
+<!-- Auth Shield: Login + OTP + RBA + Panic Mode + Biometric + Voice OTP + Magic Link + Sessions -->
+<!-- Reset handler: visit ?reset to clear all demo data and start fresh -->
+<script>
+  (function() {
+    if (location.search.includes('reset')) {
+      localStorage.clear();
+      sessionStorage.clear();
+      location.replace(location.pathname);
+    }
+  })();
+</script>
+
+<!-- Account Switch: Click avatar in header to switch Parent/Children/Family -->
+<script src="js/account-switch.js?v=11"></script>
+
+<script src="js/auth-shield.js?v=11"></script>
+
+<!-- On-Device Encryption (Web Crypto API) -->
+<script src="js/vault-crypt.js?v=11"></script>
+
+<!-- Compliance Suite: Privacy, AA, Risk Sandbox, Explainability, Wealth Score -->
+<script src="js/compliance-suite.js?v=11"></script>
+
+<!-- Family Mode + Peer Benchmark + Financial DNA + Onboarding + Voice Banking -->
+<script src="js/family-innovations.js?v=11"></script>
+
+<!-- Demo Features: Salary, Credit Card, Food Compare, Subscriptions, Innovations -->
+<script src="js/demo-features.js?v=11"></script>
+
+<!-- Global Innovations — World-Class Foreign Bank Features -->
+<script src="js/global-innovations.js?v=11"></script>
+
+<!-- Charts fix -->
+<script src="js/charts-fix.js?v=11"></script>
+<script src="js/dashboard-fix.js?v=11"></script>
+
+</body>
+</html>

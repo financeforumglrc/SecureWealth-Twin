@@ -1,0 +1,95 @@
+{
+  "name": "SecureWealth Twin — Wealth Intelligence",
+  "short_name": "WealthTwin",
+  "description": "AI-powered wealth intelligence with built-in fraud protection for Indian banking customers.",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "background_color": "#0B1D3A",
+  "theme_color": "#0B1D3A",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "id": "/",
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "display_override": ["standalone", "minimal-ui"],
+  "edge_side_panel": {},
+  "icons": [
+    {
+      "src": "/assets/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["finance", "productivity", "business"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Home",
+      "description": "View your financial dashboard",
+      "url": "/?source=pwa&view=dashboard",
+      "icons": [{ "src": "/assets/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Wealth Twin AI",
+      "short_name": "AI Chat",
+      "description": "Chat with Wealth Twin AI assistant",
+      "url": "/?source=pwa&view=wealth-twin",
+      "icons": [{ "src": "/assets/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Protection Center",
+      "short_name": "Protect",
+      "description": "View your fraud protection status",
+      "url": "/?source=pwa&view=protection",
+      "icons": [{ "src": "/assets/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ]
+}
