@@ -8,6 +8,26 @@
 (function() {
   'use strict';
 
+  // Safe clipboard helper (works in non-HTTPS / Capacitor WebView)
+  window.copyTextSafe = function(text, toastMsg) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text);
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed'; ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      if (App && App.showToast) App.showToast(toastMsg || 'Copied!', 'info');
+    } catch (e) {
+      if (App && App.showToast) App.showToast('Press Ctrl+C to copy', 'info');
+    }
+  };
+
   const C = n => {
     if (n >= 1e7) return '₹' + (n/1e7).toFixed(2) + 'Cr';
     if (n >= 1e5) return '₹' + (n/1e5).toFixed(1) + 'L';
@@ -67,7 +87,7 @@
       '<div><span class="text-xs text-slate-400 block mb-1">Expiry</span><span class="font-semibold">12/28</span></div>' +
       '<div><span class="text-xs text-slate-400 block mb-1">CVV</span><span class="font-mono font-semibold" id="cvv-display">•••</span><button onclick="var e=document.getElementById(\'cvv-display\');e.textContent=e.textContent===\'•••\'?\'123\':\'•••\'" class="ml-2 text-xs text-blue-600 hover:underline">Show/Hide</button></div>' +
       '<div><span class="text-xs text-slate-400 block mb-1">Card Type</span><span class="font-semibold">Visa Signature</span></div></div>' +
-      '<div class="mt-4 flex gap-2"><button onclick="navigator.clipboard.writeText(\'4111111111111111\');App.showToast(\'Card number copied (demo)\',\'info\')" class="fb-btn fb-btn-outline fb-btn-sm"><i class="fas fa-copy mr-1.5"></i>Copy Number</button>' +
+      '<div class="mt-4 flex gap-2"><button onclick="copyTextSafe(\'4111111111111111\',\'Card number copied (demo)\')" class="fb-btn fb-btn-outline fb-btn-sm"><i class="fas fa-copy mr-1.5"></i>Copy Number</button>' +
       '<button onclick="App.showToast(\'⚠️ Demo — no actual charges\',\'warning\')" class="fb-btn fb-btn-sm" style="background:#C4A962;color:#0B1D3A;"><i class="fas fa-exclamation-triangle mr-1.5"></i>Test Payment</button></div></div>' +
       '<div class="p-4 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 rounded-xl text-xs text-amber-700 dark:text-amber-300"><i class="fas fa-info-circle mr-1.5"></i><b>Disclaimer:</b> Demo card for hackathon. No actual charges.</div></div>';
   }
