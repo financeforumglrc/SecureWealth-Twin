@@ -4,6 +4,7 @@
   "webDir": "www",
   "bundledWebRuntime": false,
   "server": {
+    "url": "https://financeforumglrc.github.io/SecureWealth-Twin",
     "androidScheme": "https",
     "cleartext": true,
     "allowNavigation": [
@@ -12,6 +13,7 @@
       "*.netlify.app",
       "*.vercel.app",
       "*.surge.sh",
+      "financeforumglrc.github.io",
       "*.generativelanguage.googleapis.com",
       "*.api-inference.huggingface.co"
     ],

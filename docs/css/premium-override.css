@@ -1,0 +1,151 @@
+/* ═══════════════════════════════════════════════════════════════════
+   SECUREWEALTH TWIN — Foreign Bank Override Styles
+   Transforms legacy Tailwind classes into foreign bank design
+   Compatible with foreign-bank.css design system
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── Root & Body ──────────────────────────────────────────── */
+body.bg-slate-50 {
+  background: var(--fb-surface) !important;
+}
+
+/* ─── Sidebar Override ───────────────────────────────────── */
+aside#sidebar {
+  background: linear-gradient(180deg, var(--fb-navy-dark) 0%, var(--fb-navy) 40%, var(--fb-navy-dark) 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Sidebar nav items — legacy class names */
+.nav-item {
+  color: rgba(255, 255, 255, 0.55) !important;
+  font-weight: 500 !important;
+  border-left: 3px solid transparent !important;
+  border-radius: var(--fb-radius) !important;
+  margin-bottom: 1px !important;
+  transition: all var(--fb-transition) !important;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.nav-item.active {
+  background: rgba(196, 169, 98, 0.1) !important;
+  color: var(--fb-gold-light) !important;
+  border-left-color: var(--fb-gold) !important;
+  font-weight: 600 !important;
+}
+
+/* ─── Header Override ───────────────────────────────────── */
+header.bg-white, header {
+  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-bottom: 1px solid var(--fb-border) !important;
+  box-shadow: 0 1px 3px rgba(11, 29, 58, 0.03) !important;
+}
+
+header h2 {
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* ─── Cards Override ────────────────────────────────────── */
+.card {
+  background: var(--fb-card) !important;
+  border: 1px solid var(--fb-border) !important;
+  border-radius: var(--fb-radius-lg) !important;
+  box-shadow: var(--fb-shadow-xs) !important;
+  transition: all var(--fb-transition) !important;
+}
+
+.card:hover {
+  box-shadow: var(--fb-shadow) !important;
+  transform: translateY(-1px) !important;
+  border-color: rgba(196, 169, 98, 0.15) !important;
+}
+
+/* Gradient cards — convert to navy gradient */
+.gradient-dark,
+.bg-gradient-to-r.from-dark {
+  background: linear-gradient(135deg, var(--fb-navy) 0%, var(--fb-navy-light) 100%) !important;
+  border: none !important;
+  box-shadow: var(--fb-shadow-md) !important;
+}
+
+/* ─── Buttons Override ──────────────────────────────────── */
+button.bg-primary, .bg-primary {
+  background: var(--fb-navy) !important;
+}
+
+button.bg-primary:hover {
+  background: var(--fb-navy-light) !important;
+}
+
+.bg-secondary { background: var(--fb-gold) !important; }
+.text-primary { color: var(--fb-navy) !important; }
+.text-secondary { color: var(--fb-gold) !important; }
+.border-primary { border-color: var(--fb-navy) !important; }
+
+/* ─── Progress Bars ─────────────────────────────────────── */
+.progress-bar {
+  background: var(--fb-surface-alt) !important;
+  height: 6px !important;
+  border-radius: 6px !important;
+}
+
+.progress-bar-fill {
+  background: linear-gradient(90deg, var(--fb-navy), var(--fb-navy-light)) !important;
+}
+
+/* ─── Dark Mode Overrides ───────────────────────────────── */
+.dark body { background: #0F1720 !important; color: var(--fb-text-inverse) !important; }
+.dark .card { background: #152030 !important; border-color: rgba(255, 255, 255, 0.06) !important; }
+.dark .bg-white { background: #152030 !important; }
+.dark .bg-slate-50 { background: #0F1720 !important; }
+.dark .bg-slate-100 { background: #152030 !important; }
+.dark .text-slate-800 { color: var(--fb-text-inverse) !important; }
+.dark .text-slate-700 { color: rgba(255, 255, 255, 0.85) !important; }
+.dark .text-slate-600 { color: rgba(255, 255, 255, 0.6) !important; }
+.dark .text-slate-500 { color: rgba(255, 255, 255, 0.5) !important; }
+.dark .border-slate-200 { border-color: rgba(255, 255, 255, 0.06) !important; }
+.dark .border-slate-100 { border-color: rgba(255, 255, 255, 0.04) !important; }
+.dark header { background: rgba(19, 32, 56, 0.85) !important; border-color: rgba(255, 255, 255, 0.05) !important; }
+.dark aside { background: #060F1E !important; }
+.dark #chatbot-window { background: #152030 !important; border-color: rgba(255, 255, 255, 0.06) !important; }
+.dark #chatbot-messages { background: #0F1720 !important; }
+.dark .bot-message { background: #152030 !important; color: var(--fb-text-inverse) !important; border: 1px solid rgba(255, 255, 255, 0.06) !important; }
+.dark .user-message { background: linear-gradient(135deg, var(--fb-navy), var(--fb-navy-light)) !important; }
+.dark input, .dark select, .dark textarea {
+  background: #152030 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: var(--fb-text-inverse) !important;
+}
+.dark table thead { border-color: rgba(255, 255, 255, 0.08) !important; }
+.dark table tbody tr { border-color: rgba(255, 255, 255, 0.04) !important; }
+.dark table tbody tr:hover { background: rgba(255, 255, 255, 0.03) !important; }
+
+/* ─── Risk Modal ────────────────────────────────────────── */
+#risk-modal-content {
+  background: var(--fb-card) !important;
+  border-radius: var(--fb-radius-xl) !important;
+}
+
+#risk-modal-content .bg-gradient-to-r {
+  background: linear-gradient(135deg, var(--fb-navy), var(--fb-navy-light)) !important;
+}
+
+/* ─── Notification Dropdown ─────────────────────────────── */
+#notif-dropdown {
+  border-radius: var(--fb-radius-lg) !important;
+  box-shadow: var(--fb-shadow-xl) !important;
+  border: 1px solid var(--fb-border) !important;
+}
+
+/* ─── Mobile Nav ────────────────────────────────────────── */
+#mobile-nav {
+  background: var(--fb-card) !important;
+  border-top: 1px solid var(--fb-border) !important;
+  box-shadow: 0 -2px 12px rgba(11, 29, 58, 0.05) !important;
+}
