@@ -286,8 +286,32 @@ const PWA = {
   }
 };
 
-// Patch App.renderView to support live-update view
+// ============================================================
+// GLOBAL FIXES: App.showToast + missing functions for App.init
+// ============================================================
+
+if (typeof window.showToast !== 'function') {
+  window.showToast = function(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 4000;
+    var toast = document.createElement('div');
+    var bg = type === 'success' ? 'bg-green-600' : type === 'warning' ? 'bg-amber-500' : type === 'error' || type === 'danger' ? 'bg-red-500' : 'bg-slate-800';
+    var icon = type === 'success' ? 'fa-check-circle' : type === 'warning' ? 'fa-exclamation-triangle' : type === 'error' || type === 'danger' ? 'fa-times-circle' : 'fa-info-circle';
+    toast.className = 'fixed bottom-28 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2 animate-fade-in max-w-sm text-white ' + bg;
+    toast.innerHTML = '<i class="fas ' + icon + '"></i> ' + message;
+    document.body.appendChild(toast);
+    setTimeout(function() {
+      toast.style.transition = 'opacity 0.3s';
+      toast.style.opacity = '0';
+      setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+  };
+}
+
 if (typeof App !== 'undefined') {
+  if (!App.showToast) App.showToast = window.showToast;
+
+  // Patch App.renderView to support live-update view
   const originalRender = App.renderView.bind(App);
   App.renderView = function(view) {
     if (view === 'live-update') {

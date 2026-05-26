@@ -243,13 +243,45 @@
     }
   };
 
-  // Init dark mode on load
-  (function initDarkMode() {
+  // Init dark mode on load (must be global — called by App.init)
+  window.initDarkMode = function initDarkMode() {
     var saved = localStorage.getItem('sw-theme');
     if (saved === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
     }
-  })();
+  };
+  window.initDarkMode();
+
+  // Theme color meta tag (called by App.init)
+  window.initThemeColor = function initThemeColor() {
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      document.head.appendChild(meta);
+    }
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    meta.content = isDark ? '#0B1D3A' : '#0B1D3A';
+  };
+
+  // Market status badge (called by App.init)
+  window.updateMarketStatus = function updateMarketStatus() {
+    var badge = document.getElementById('market-status-badge');
+    if (!badge) return;
+    var now = new Date();
+    var hour = now.getHours() + now.getMinutes() / 60;
+    var isOpen = hour >= 9.25 && hour <= 15.5 && now.getDay() >= 1 && now.getDay() <= 5;
+    badge.className = 'fb-header-pill ' + (isOpen ? 'market-open' : 'market-closed') + ' hidden md:inline-flex';
+    badge.innerHTML = '<i class="fas fa-circle text-[6px]"></i> ' + (isOpen ? 'Market Open' : 'Market Closed');
+  };
+
+  // Onboarding wizard launcher (called by App.init)
+  window.showOnboarding = function showOnboarding() {
+    if (localStorage.getItem('sw_onboarded') === 'true') return;
+    if (typeof initOnboarding === 'function') {
+      initOnboarding();
+    }
+  };
 
   // ═══════════════════════════════════════════════════════
   //  Live Clock
