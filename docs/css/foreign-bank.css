@@ -1045,6 +1045,22 @@ body.sidebar-collapsed .fb-header {
   color: var(--fb-text-inverse);
 }
 
+/* ─── Mobile sidebar overlay backdrop ────────────────────────── */
+body.sidebar-open::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 40;
+}
+body.sidebar-open .fb-sidebar.open {
+  z-index: 50;
+}
+#mobile-menu-btn {
+  z-index: 100 !important;
+  position: relative;
+}
+
 /* ─── Mobile Improvements ───────────────────────────────────── */
 @media (max-width: 768px) {
   #mobile-nav { display: flex !important; }
@@ -1061,16 +1077,6 @@ body.sidebar-collapsed .fb-header {
   #chatbot-window { width: calc(100vw - 2rem) !important; max-height: 60vh; right: 1rem; }
   #notif-dropdown { width: calc(100vw - 2rem) !important; right: 0.5rem !important; left: 0.5rem !important; }
 }
-
-/* Sidebar open overlay */
-body.sidebar-open::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 45;
-}
-body.sidebar-open .fb-sidebar.open { z-index: 50; }
 
 /* Touch-friendly tweaks */
 .nav-item, .fb-nav-item, .fb-header-btn, #mobile-nav a { cursor: pointer; -webkit-tap-highlight-color: transparent; }

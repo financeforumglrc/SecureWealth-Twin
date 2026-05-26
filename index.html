@@ -548,42 +548,51 @@
 <!-- ═══ FINAL SIDEBAR MENU FIX — runs last after all scripts ═══ -->
 <script>
 (function(){
-  var btn = document.getElementById('mobile-menu-btn');
   var sidebar = document.getElementById('sidebar');
-  if (!btn || !sidebar) return;
+  if (!sidebar) return;
 
-  // Clone to strip ALL old event listeners
-  var clone = btn.cloneNode(true);
-  btn.parentNode.replaceChild(clone, btn);
+  // Replace the menu button with a fresh one (no event listeners at all)
+  var oldBtn = document.getElementById('mobile-menu-btn');
+  if (oldBtn) {
+    var newBtn = document.createElement('button');
+    newBtn.id = 'mobile-menu-btn';
+    newBtn.className = 'fb-header-btn';
+    newBtn.title = 'Menu';
+    newBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
 
-  clone.onclick = function(e) {
-    e.stopPropagation();
-    sidebar.classList.remove('hidden', 'absolute', 'z-40');
-    var isMobile = window.innerWidth < 768;
-    if (isMobile) {
-      sidebar.classList.toggle('open');
-    } else {
-      document.body.classList.toggle('sidebar-collapsed');
-    }
-  };
+    newBtn.addEventListener('click', function(e) {
+      var isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        sidebar.classList.add('open');
+        document.body.classList.add('sidebar-open');
+      } else {
+        document.body.classList.toggle('sidebar-collapsed');
+      }
+    });
+  }
 
   // Close sidebar on nav item click
   sidebar.addEventListener('click', function(e) {
     var item = e.target.closest('[data-view]');
     if (item) {
-      var isMobile = window.innerWidth < 768;
-      if (isMobile) {
+      if (window.innerWidth < 768) {
         sidebar.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
       } else {
         document.body.classList.remove('sidebar-collapsed');
       }
     }
   });
 
-  // Also close sidebar when clicking overlay
+  // Close mobile sidebar when clicking outside
   document.addEventListener('click', function(e) {
-    if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== clone && !clone.contains(e.target)) {
-      sidebar.classList.remove('open');
+    if (window.innerWidth < 768 && sidebar.classList.contains('open')) {
+      var btn = document.getElementById('mobile-menu-btn');
+      if (!sidebar.contains(e.target) && (!btn || !btn.contains(e.target))) {
+        sidebar.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
+      }
     }
   });
 })();
